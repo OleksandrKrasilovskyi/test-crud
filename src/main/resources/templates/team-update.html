@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<meta charset="UTF-8">
+<title>Create team</title>
+</head>
+<body>
+<form action="#" th:action="@{/team-update}" th:object="${team}" method="post">
+    <label for="id">ID</label>
+    <input readonly type="number" th:field="*{id}" id="id" placeholder="ID">
+    <br/>
+    <label for="teamName">Team name</label>
+    <input type="text" th:field="*{teamName}" id="teamName" placeholder="Team Name">
+    <br/>
+    <label for="capitanName">Capitan name</label>
+    <input type="text" th:field="*{capitanName}" id="capitanName" placeholder="Capitan Name">
+    <br/>
+    <label for="coachName">Coach name</label>
+    <input type="text" th:field="*{coachName}" id="coachName" placeholder="Coach Name">
+    <br/>
+    <input type="submit" value="Update User">
+</form>
+</body>
+</html>
