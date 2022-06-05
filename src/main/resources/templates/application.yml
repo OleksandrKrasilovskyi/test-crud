@@ -1,0 +1,23 @@
+spring:
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    url: jdbc:postgresql://localhost:5432/springboot_hibernate_tournament
+    username: postgres
+    password: 25472547
+    hikari:
+      poolName: Hikari
+      auto-commit: true
+      maximumPoolSize: 3
+      maxLifetime: 900000
+  jpa:
+    show-sql: true
+#    open-in-view: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQL95Dialect
+        default_schema: public
+        jdbc:
+          lob:
+            non_contextual_creation: true
+    hibernate:
+      ddl-auto: update

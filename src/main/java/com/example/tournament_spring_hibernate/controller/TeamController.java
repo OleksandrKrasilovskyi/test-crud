@@ -1,56 +1,84 @@
 package com.example.tournament_spring_hibernate.controller;
 
-import com.example.tournament_spring_hibernate.model.Team;
+import com.example.tournament_spring_hibernate.entity.Team;
 import com.example.tournament_spring_hibernate.service.TeamService;
 import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
-@Controller
 @AllArgsConstructor
+@RestController
+@RequestMapping("/teams")
 public class TeamController {
 
     private TeamService teamService;
 
-    @GetMapping("/teams")
-    public String findAll(Model model){
-        List<Team> teams = teamService.findAll();
-        model.addAttribute("teams", teams);
-        return "team-list";
-    }
+    @GetMapping
+    public ResponseEntity<List<Team>> getAllTeams () {
+        List<Team> teams = this.teamService.getAll();
 
-    @GetMapping("/team-create")
-    public String createTeamForm(Team team){
-        return "team-create";
-    }
+        if (teams.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
 
-    @PostMapping("/team-create")
-    public String createTeam(Team team){
-        teamService.saveTeam(team);
-        return "redirect:/teams";
+        return new ResponseEntity<>(teams, HttpStatus.OK);
     }
+        @GetMapping("/{teamId}")
+        public ResponseEntity<Team> getTeamById (Long teamId){
+            if (teamId == null) {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
 
-    @GetMapping("team-delete/{id}")
-    public String deleteTeam (@PathVariable("id") Long id){
-        teamService.deleteById(id);
-    return "redirect:/teams";
-    }
+            Optional<Team> team = this.teamService.getById(teamId);
 
-    @GetMapping("/team-update/{id}")
-    public String updateTeamForm(@PathVariable("id") Long id, Model model){
-        Team team = teamService.findById(id);
-        model.addAttribute("team", team);
-        return "team-update";
-    }
+            if (team.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
 
-    @PostMapping("/team-update")
-    public String updateTeam(Team team){
-        teamService.saveTeam(team);
-        return "redirect:/teams";
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+
+        @PostMapping("/teamId")
+        public ResponseEntity<Team> saveCustomer (@RequestBody @Validated Team team){
+            HttpHeaders headers = new HttpHeaders();
+
+            if (team == null) {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+
+            this.teamService.save(team);
+            return new ResponseEntity<>(team, headers, HttpStatus.CREATED);
+        }
+
+        @PutMapping("/teamId")
+        public ResponseEntity<Team> updateCustomer (@RequestBody @Validated Team team){
+            HttpHeaders headers = new HttpHeaders();
+
+            if (team == null) {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+
+            this.teamService.save(team);
+
+            return new ResponseEntity<>(team, headers, HttpStatus.OK);
+        }
+
+        @DeleteMapping("/teamId")
+        public ResponseEntity<Team> deleteCustomer (Long id){
+            Optional<Team> team = this.teamService.getById(id);
+
+            if (team.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+
+            this.teamService.deleteById(id);
+
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
     }
-}
