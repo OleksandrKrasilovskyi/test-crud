@@ -1,85 +1,42 @@
 package com.example.tournament_spring_hibernate.controller;
 
-import com.example.tournament_spring_hibernate.entity.Match;
-import com.example.tournament_spring_hibernate.entity.Team;
+import com.example.tournament_spring_hibernate.dto.MatchDTO;
 import com.example.tournament_spring_hibernate.service.MatchService;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/matches")
+@RequestMapping("/match")
+
 public class MatchController {
 
-    private MatchService matchService;
+    private final MatchService matchService;
 
     @GetMapping
-    public ResponseEntity<List<Match>> getAllTeams () {
-        List<Match> matches = this.matchService.getAll();
-
-        if (matches.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        return new ResponseEntity<>(matches, HttpStatus.OK);
+    public ResponseEntity<List<MatchDTO>> getAllMatches() {
+        return ResponseEntity.ok(matchService.findAll());
     }
+
     @GetMapping("/{matchId}")
-    public ResponseEntity<Match> getMatchById (Long matchId){
-        if (matchId == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-
-        Optional<Match> match = this.matchService.getById(matchId);
-
-        if (match.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<MatchDTO> getMatchById(@PathVariable long matchId) {
+        return ResponseEntity.ok(matchService.findById(matchId));
     }
 
-    @PostMapping("/matchId")
-    public ResponseEntity<Match> saveCustomer (@RequestBody @Validated Match match){
-        HttpHeaders headers = new HttpHeaders();
-
-        if (match == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-
-        this.matchService.save(match);
-        return new ResponseEntity<>(match, headers, HttpStatus.CREATED);
+    @PutMapping("/{matchId}")
+    @ResponseStatus(HttpStatus.OK)
+    public void updateMatchById(@PathVariable long matchId,
+                               @RequestBody MatchDTO matchDTO) {
+        matchService.updateMatchById(matchId, matchDTO);
     }
 
-    @PutMapping("/matchId")
-    public ResponseEntity<Match> updateCustomer (@RequestBody @Validated Match match){
-        HttpHeaders headers = new HttpHeaders();
-
-        if (match == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-
-        this.matchService.save(match);
-
-        return new ResponseEntity<>(match, headers, HttpStatus.OK);
-    }
-
-    @DeleteMapping("/matchId")
-    public ResponseEntity<Team> deleteCustomer (Long id){
-        Optional<Match> match = this.matchService.getById(id);
-
-        if (match.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        this.matchService.deleteById(id);
-
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    @RequestMapping(value = "/{matchId}", method = RequestMethod.DELETE)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteById(@PathVariable long matchId) {
+        matchService.deleteById(matchId);
     }
 }

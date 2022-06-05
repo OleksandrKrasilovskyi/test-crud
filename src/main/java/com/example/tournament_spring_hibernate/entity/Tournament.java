@@ -7,7 +7,7 @@ import org.springframework.lang.NonNull;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Set;
+import java.util.List;
 
 @Getter
 @Setter
@@ -26,10 +26,10 @@ public class Tournament implements Serializable {
     private String tournamentName;
 
     @OneToMany(mappedBy = "tournament")
-    private Set<Team> teams;
+    private List<Team> teams;
 
     @OneToMany(mappedBy = "tournament")
-    private Set<Match> matches;
+    private List<Match> matches;
 
     @Override
     public String toString() {
