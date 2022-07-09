@@ -9,5 +9,4 @@ public class TournamentSpringHibernateApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(TournamentSpringHibernateApplication.class, args);
 	}
-
 }
