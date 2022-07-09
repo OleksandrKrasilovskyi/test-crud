@@ -8,7 +8,7 @@ import lombok.experimental.Accessors;
 @Setter
 @Accessors(chain = true)
 public class TeamDTO {
-
+    private Long tournamentId;
     private Long id;
     private String teamName;
     private String capitanName;

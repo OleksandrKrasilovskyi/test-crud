@@ -7,11 +7,10 @@ import lombok.experimental.Accessors;
 @Getter
 @Setter
 @Accessors(chain = true)
-public class MatchDTO {
-    private Long tournamentId;
+public class UserDTO {
     private Long id;
-    private String round;
-    private String firstTeam;
-    private String secondTeam;
-    private String score;
+    private String email;
+    private String userName;
+    private String password;
+    private String permission;
 }

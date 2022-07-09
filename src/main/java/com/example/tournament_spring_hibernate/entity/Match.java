@@ -3,26 +3,24 @@ package com.example.tournament_spring_hibernate.entity;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import org.springframework.lang.NonNull;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
 @Entity
 @Accessors(chain = true)
 @Table(name = "match")
-public class Match implements Serializable {
+public class Match implements Serializable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "match_id")
     private Long id;
 
-    @Column(nullable = false, updatable = false, length = 20)
-    @NonNull
+    @Column(length = 20)
     private String round;
 
     @Column(name = "first_team", length = 100)
@@ -41,9 +39,9 @@ public class Match implements Serializable {
 
     @ManyToMany
     @JoinTable(name = "match_teams",
-    joinColumns = @JoinColumn(name = "match_id"),
-    inverseJoinColumns = @JoinColumn(name = "team_id"))
-    private List<Team> teams;
+            joinColumns = @JoinColumn(name = "match_id"),
+            inverseJoinColumns = @JoinColumn(name = "team_id"))
+    private Set<Team> teams;
 
     @Override
     public String toString() {

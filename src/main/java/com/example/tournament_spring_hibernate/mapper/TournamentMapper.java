@@ -1,24 +1,27 @@
 package com.example.tournament_spring_hibernate.mapper;
 
 import com.example.tournament_spring_hibernate.dto.TournamentDTO;
-import com.example.tournament_spring_hibernate.entity.Match;
-import com.example.tournament_spring_hibernate.entity.Team;
 import com.example.tournament_spring_hibernate.entity.Tournament;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@AllArgsConstructor
 public class TournamentMapper {
+    private final TeamMapper teamMapper;
+    private final MatchMapper matchMapper;
 
-    public List<TournamentDTO> mapEntityToDto(List<Tournament> tournamentList) {
-        return tournamentList.stream()
+    public List<TournamentDTO> mapEntityToDto(List<Tournament> tournamentSet) {
+        return tournamentSet.stream()
                 .map(tournament -> new TournamentDTO()
                         .setId(tournament.getId())
                         .setTournamentName(tournament.getTournamentName())
-                        .setTeamList(tournament.getTeams())
-                        .setMatchList(tournament.getMatches()))
+                        .setTeamList(new HashSet<>(teamMapper.mapEntityToDto(new HashSet<>(tournament.getTeams()))))
+                        .setMatchList(new HashSet<>(matchMapper.mapEntityToDto(new HashSet<>(tournament.getMatches())))))
                 .collect(Collectors.toList());
     }
 
@@ -26,24 +29,15 @@ public class TournamentMapper {
         return new TournamentDTO()
                 .setId(tournament.getId())
                 .setTournamentName(tournament.getTournamentName())
-                .setTeamList(tournament.getTeams())
-                .setMatchList(tournament.getMatches());
+                .setTeamList(new HashSet<>(teamMapper.mapEntityToDto(new HashSet<>(tournament.getTeams()))))
+                .setMatchList(new HashSet<>(matchMapper.mapEntityToDto(new HashSet<>(tournament.getMatches()))));
     }
 
-    public void update(TournamentDTO tournamentDTO, Tournament tournamentById) {
-        final String tournamentName = tournamentDTO.getTournamentName();
-        if (tournamentName != null) {
-            tournamentById.setTournamentName(tournamentName);
-        }
-
-        final List<Team> teamList = tournamentDTO.getTeamList();
-        if (teamList != null) {
-            tournamentById.setTeams(teamList);
-        }
-
-        final List<Match> matchList = tournamentDTO.getMatchList();
-        if (matchList != null) {
-            tournamentById.setMatches(matchList);
-        }
+    public Tournament mapDtoToEntity(TournamentDTO tournamentDTO) {
+        return new Tournament()
+                .setId(tournamentDTO.getId())
+                .setTournamentName(tournamentDTO.getTournamentName())
+                .setTeams(new HashSet<>(teamMapper.mapDtoToEntity(tournamentDTO.getTeamList())))
+                .setMatches(new HashSet<>(matchMapper.mapDtoToEntity(tournamentDTO.getMatchList())));
     }
 }

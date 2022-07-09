@@ -3,11 +3,10 @@ package com.example.tournament_spring_hibernate.entity;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import org.springframework.lang.NonNull;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -21,16 +20,13 @@ public class Team implements Serializable {
     @Column(name = "team_id")
     private Long id;
 
-    @Column(name = "team_name", nullable = false, updatable = false, length = 100)
-    @NonNull
+    @Column(name = "team_name", nullable = false, length = 100)
     private String teamName;
 
-    @Column(name = "capitan_name", nullable = false, updatable = false, length = 100)
-    @NonNull
+    @Column(name = "capitan_name", nullable = false, length = 100)
     private String capitanName;
 
-    @Column(name = "coach_name", nullable = false, updatable = false, length = 100)
-    @NonNull
+    @Column(name = "coach_name", nullable = false, length = 100)
     private String coachName;
 
     //TODO learn about lazy and eager
@@ -39,5 +35,5 @@ public class Team implements Serializable {
     private Tournament tournament;
 
     @ManyToMany(mappedBy = "teams")
-    private List<Match> matches;
+    private Set<Match> matches;
 }

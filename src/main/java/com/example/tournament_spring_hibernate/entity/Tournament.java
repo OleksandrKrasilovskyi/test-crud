@@ -3,11 +3,10 @@ package com.example.tournament_spring_hibernate.entity;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import org.springframework.lang.NonNull;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -21,15 +20,14 @@ public class Tournament implements Serializable {
     @Column(name = "tournament_id")
     private Long id;
 
-    @Column(name = "tournament_name", nullable = false, updatable = false, length = 100)
-    @NonNull
+    @Column(name = "tournament_name", nullable = false, length = 100)
     private String tournamentName;
 
     @OneToMany(mappedBy = "tournament")
-    private List<Team> teams;
+    private Set<Team> teams;
 
     @OneToMany(mappedBy = "tournament")
-    private List<Match> matches;
+    private Set<Match> matches;
 
     @Override
     public String toString() {

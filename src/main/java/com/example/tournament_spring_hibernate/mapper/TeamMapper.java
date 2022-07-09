@@ -5,12 +5,13 @@ import com.example.tournament_spring_hibernate.entity.Team;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
 public class TeamMapper {
 
-    public List<TeamDTO> mapEntityToDto(List<Team> teamList) {
+    public List<TeamDTO> mapEntityToDto(Set<Team> teamList) {
         return teamList.stream()
                 .map(team -> new TeamDTO()
                         .setId(team.getId())
@@ -28,20 +29,21 @@ public class TeamMapper {
                 .setCoachName(team.getCoachName());
     }
 
-    public void update(TeamDTO teamDTO, Team teamById) {
-        final String newTeamName = teamDTO.getTeamName();
-        if (newTeamName != null) {
-            teamById.setTeamName(newTeamName);
-        }
+    public Team mapDTOToEntity(TeamDTO teamDTO) {
+        return new Team()
+                .setId(teamDTO.getId())
+                .setTeamName(teamDTO.getTeamName())
+                .setCapitanName(teamDTO.getCapitanName())
+                .setCoachName(teamDTO.getCoachName());
+    }
 
-        final String capitanName = teamDTO.getCapitanName();
-        if (capitanName != null) {
-            teamById.setCapitanName(capitanName);
-        }
-
-        final String coachName = teamDTO.getCoachName();
-        if (coachName != null) {
-            teamById.setCoachName(coachName);
-        }
+    public List<Team> mapDtoToEntity(Set<TeamDTO> teamDTOSet) {
+        return teamDTOSet.stream()
+                .map(teamDTO -> new Team()
+                        .setId(teamDTO.getId())
+                        .setTeamName(teamDTO.getTeamName())
+                        .setCapitanName(teamDTO.getCapitanName())
+                        .setCoachName(teamDTO.getCoachName()))
+                .collect(Collectors.toList());
     }
 }
